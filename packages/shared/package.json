@@ -1,0 +1,17 @@
+{
+  "name": "@ariscode/shared",
+  "version": "0.1.0",
+  "description": "Shared types and constants for Aris Code",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "npx tsc",
+    "typecheck": "npx tsc --noEmit",
+    "dev": "npx tsc --watch"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

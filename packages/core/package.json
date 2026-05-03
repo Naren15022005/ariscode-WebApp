@@ -1,0 +1,28 @@
+{
+  "name": "@ariscode/core",
+  "version": "0.1.0",
+  "description": "Core business logic and infrastructure for Aris Code",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "npx tsc",
+    "typecheck": "npx tsc --noEmit",
+    "test": "npx vitest",
+    "dev": "npx tsc --watch"
+  },
+  "dependencies": {
+    "@ariscode/shared": "workspace:*",
+    "flexsearch": "^0.7.43",
+    "handlebars": "^4.7.7",
+    "@octokit/rest": "^21.0.0",
+    "@babel/parser": "^7.23.6",
+    "php-parser": "^3.1.5",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3",
+    "vitest": "^1.0.4",
+    "@types/node": "^20.10.6"
+  }
+}

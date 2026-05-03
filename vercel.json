@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "buildCommand": "cd packages/web && pnpm build",
+  "outputDirectory": "packages/web/.next",
+  "root": "packages/web",
+  "env": {
+    "NODE_ENV": "production"
+  }
+}

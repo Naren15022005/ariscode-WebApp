@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.next/
+*.db
+*.log
+.env.local
+.DS_Store
+.idea/
+.vscode/
