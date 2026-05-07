@@ -1,0 +1,33 @@
+{
+  "id": "react-component",
+  "name": "React Component",
+  "description": "React functional component with optional props, CSS modules, and tests",
+  "framework": "react",
+  "language": "typescript",
+  "version": "1.0.0",
+  "source": "base",
+  "priority": 3,
+  "files": ["component.hbs", "styles.hbs", "tests.hbs"],
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "componentName": { "type": "string", "description": "Component name in PascalCase" },
+      "useProps": { "type": "boolean", "default": true },
+      "useStyles": { "type": "boolean", "default": true },
+      "props": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "type": { "type": "string" },
+            "optional": { "type": "boolean", "default": false }
+          },
+          "required": ["name", "type"]
+        },
+        "default": []
+      }
+    },
+    "required": ["componentName"]
+  }
+}

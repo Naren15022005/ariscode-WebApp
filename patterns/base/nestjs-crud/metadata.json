@@ -1,0 +1,30 @@
+{
+  "id": "nestjs-crud",
+  "name": "NestJS CRUD Module",
+  "description": "Full CRUD module for NestJS with TypeORM: entity, service, controller, module, DTOs",
+  "framework": "nestjs",
+  "language": "typescript",
+  "version": "1.0.0",
+  "source": "base",
+  "priority": 3,
+  "files": ["entity.hbs", "service.hbs", "controller.hbs", "module.hbs", "dto/create.hbs"],
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "entityName": { "type": "string", "description": "Name of the entity (e.g. User, Product)" },
+      "fields": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "type": { "type": "string", "enum": ["string", "number", "boolean", "Date"] },
+            "nullable": { "type": "boolean", "default": false }
+          },
+          "required": ["name", "type"]
+        }
+      }
+    },
+    "required": ["entityName", "fields"]
+  }
+}

@@ -2,6 +2,8 @@ export * from './database/sqlite.service';
 export * from './database/pattern.repository';
 export * from './database/project.repository';
 export * from './database/solution.repository';
+export * from './database/conversation.repository';
+export * from './database/session.repository';
 export * from './generator/handlebars.generator';
 export * from './search/flexsearch.index';
 export * from './github/scraper';

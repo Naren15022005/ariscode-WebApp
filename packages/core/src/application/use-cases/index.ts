@@ -1,5 +1,5 @@
-import { Pattern, GenerationConfig, GeneratedFile, Project, Solution } from '@ariscode/shared';
-import { IPatternRepository, IGenerator, ITemplateRepository, IProjectRepository, ISolutionRepository } from '../../domain/repositories';
+import { Pattern, GenerationConfig, GeneratedFile, Project, Solution, Conversation, ConversationMessage, Session } from '@ariscode/shared';
+import { IPatternRepository, IGenerator, ITemplateRepository, IProjectRepository, ISolutionRepository, IConversationRepository, ISessionRepository } from '../../domain/repositories';
 import { SyncCronService, SyncStats } from '../../infrastructure/github/sync-cron-service';
 
 export class GenerateProjectUseCase {
@@ -97,6 +97,49 @@ export class SearchSolutionsByErrorUseCase {
 
   async execute(errorMessage: string): Promise<Solution[]> {
     return this.solutionRepository.searchByError(errorMessage);
+  }
+}
+
+export class GetConversationsUseCase {
+  constructor(private conversationRepository: IConversationRepository) {}
+
+  async execute(userId?: string): Promise<Conversation[]> {
+    return this.conversationRepository.findAll(userId);
+  }
+}
+
+export class CreateConversationUseCase {
+  constructor(private conversationRepository: IConversationRepository) {}
+
+  async execute(data: { title: string; userId?: string }): Promise<Conversation> {
+    const conversation: Conversation = {
+      id: `conv-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      userId: data.userId ?? 'local',
+      title: data.title,
+      messages: [],
+      status: 'active',
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+    await this.conversationRepository.create(conversation);
+    return conversation;
+  }
+}
+
+export class AddMessageUseCase {
+  constructor(private conversationRepository: IConversationRepository) {}
+
+  async execute(data: { conversationId: string; role: 'user' | 'system' | 'assistant'; content: string; metadata?: Record<string, string> }): Promise<ConversationMessage> {
+    const message: ConversationMessage = {
+      id: `msg-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      conversationId: data.conversationId,
+      role: data.role,
+      content: data.content,
+      metadata: data.metadata,
+      createdAt: Date.now(),
+    };
+    await this.conversationRepository.addMessage(message);
+    return message;
   }
 }
 

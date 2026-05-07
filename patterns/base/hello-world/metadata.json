@@ -1,0 +1,23 @@
+{
+  "id": "hello-world",
+  "name": "Hello World",
+  "description": "A simple Hello World starter template in multiple languages",
+  "framework": "generic",
+  "language": "typescript",
+  "version": "1.0.0",
+  "source": "base",
+  "priority": 3,
+  "files": ["template.hbs"],
+  "configSchema": {
+    "type": "object",
+    "properties": {
+      "projectName": { "type": "string", "default": "MyProject" },
+      "language": {
+        "type": "string",
+        "enum": ["typescript", "javascript", "python", "php"],
+        "default": "typescript"
+      }
+    },
+    "required": ["projectName"]
+  }
+}

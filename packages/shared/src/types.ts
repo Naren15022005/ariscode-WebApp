@@ -129,6 +129,59 @@ export interface GenerationConfig {
   outputPath?: string;
 }
 
+// Conversation entity
+export interface Conversation {
+  id: string;
+  userId: string;
+  title: string;
+  description?: string;
+  messages: ConversationMessage[];
+  status: 'active' | 'archived';
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface ConversationMessage {
+  id: string;
+  conversationId: string;
+  role: 'user' | 'system' | 'assistant';
+  content: string;
+  metadata?: {
+    generatedProjectId?: string;
+    templateUsed?: string;
+  };
+  createdAt: number;
+}
+
+// Session entity
+export interface Session {
+  id: string;
+  userId: string;
+  deviceId?: string;
+  startedAt: number;
+  lastActivityAt: number;
+  expiresAt?: number;
+  ipAddress?: string;
+  userAgent?: string;
+  isActive: boolean;
+}
+
+// Fix (used in solutions)
+export interface Fix {
+  title: string;
+  code: string;
+  explanation: string;
+}
+
+// Pattern version tracking
+export interface PatternVersionInfo {
+  id: string;
+  currentVersion: string;
+  userModified: boolean;
+  lastModificationHash?: string;
+  availableUpdate?: string;
+}
+
 // Sync result
 export interface SyncResult {
   status: SyncStatus;

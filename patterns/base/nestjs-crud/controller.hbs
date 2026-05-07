@@ -1,0 +1,41 @@
+import { Controller, Get, Post, Body, Patch, Param, Delete, ParseUUIDPipe } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { {{pascalCase entityName}}Service } from './{{kebabCase entityName}}.service';
+import { Create{{pascalCase entityName}}Dto } from './dto/create-{{kebabCase entityName}}.dto';
+import { Update{{pascalCase entityName}}Dto } from './dto/update-{{kebabCase entityName}}.dto';
+
+@ApiTags('{{kebabCase entityName}}s')
+@Controller('{{kebabCase entityName}}s')
+export class {{pascalCase entityName}}Controller {
+  constructor(private readonly service: {{pascalCase entityName}}Service) {}
+
+  @Post()
+  @ApiOperation({ summary: 'Create {{entityName}}' })
+  create(@Body() dto: Create{{pascalCase entityName}}Dto) {
+    return this.service.create(dto);
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'List all {{entityName}}s' })
+  findAll() {
+    return this.service.findAll();
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get {{entityName}} by id' })
+  findOne(@Param('id', ParseUUIDPipe) id: string) {
+    return this.service.findOne(id);
+  }
+
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update {{entityName}}' })
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() dto: Update{{pascalCase entityName}}Dto) {
+    return this.service.update(id, dto);
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete {{entityName}}' })
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.service.remove(id);
+  }
+}

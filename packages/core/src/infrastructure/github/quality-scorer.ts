@@ -1,54 +1,90 @@
-interface RepoMetrics {
+export interface RepositoryQuality {
   stars: number;
-  lastActivity: number;
-  maintenanceScore: number;
-  licenseBonus: number;
+  daysSinceLastCommit: number;
+  issueClosureRate: number;
+  prMergeRate: number;
+  hasTests: boolean;
+  testCoverage: number;
+  readmeLength: number;
+  license: string | undefined | null;
+  isPermissive: boolean;
+  userFeedback?: { upvotes: number; downvotes: number };
 }
 
+const PERMISSIVE_LICENSES = ['MIT', 'Apache-2.0', 'BSD-3-Clause', 'BSD-2-Clause', 'ISC'];
+const QUALITY_THRESHOLD = 70;
+
 export class QualityScorer {
-  private readonly QUALITY_THRESHOLD = 70;
-  private readonly PERMISSIVE_LICENSES = ['MIT', 'Apache-2.0', 'BSD-3-Clause', 'BSD-2-Clause', 'ISC'];
+  static calculate(repo: RepositoryQuality): number {
+    // GPL and non-permissive = auto-reject
+    if (!repo.isPermissive) return 0;
 
-  calculateScore(metrics: RepoMetrics): number {
-    const starsScore = this.normalizeStars(metrics.stars);
-    const recencyScore = this.calculateRecency(metrics.lastActivity);
-    const maintenanceScore = metrics.maintenanceScore;
-    const licenseBonus = metrics.licenseBonus;
+    // Dead repos = auto-reject
+    if (repo.daysSinceLastCommit > 180) return 0;
 
-    const score =
-      starsScore * 0.3 +
-      recencyScore * 0.3 +
-      maintenanceScore * 0.2 +
-      licenseBonus * 0.2;
+    let score = 0;
 
-    return score;
+    // Stars (logarithmic — capped at 30 points)
+    score += Math.min(30, (Math.log(repo.stars + 1) / Math.log(100_000)) * 30);
+
+    // Recency penalty
+    if (repo.daysSinceLastCommit > 90) score -= 25;
+    else if (repo.daysSinceLastCommit > 30) score -= 10;
+    else if (repo.daysSinceLastCommit <= 7) score += 5;
+
+    // Maintenance (issue closure + PR merge rates)
+    score += repo.issueClosureRate * 20;
+    score += repo.prMergeRate * 15;
+
+    // Testing
+    if (repo.hasTests) {
+      score += Math.min(10, repo.testCoverage / 10);
+    }
+
+    // Documentation (readme length)
+    score += Math.min(10, repo.readmeLength / 500);
+
+    // Community feedback
+    if (repo.userFeedback) {
+      const { upvotes, downvotes } = repo.userFeedback;
+      const ratio = upvotes / Math.max(downvotes, 1);
+      if (ratio < 0.5) score -= 30;
+      else if (ratio >= 2) score += 5;
+    }
+
+    return Math.max(0, Math.min(100, score));
   }
 
-  private normalizeStars(stars: number): number {
-    // Normalize stars: 1k = 50 points, 10k = 80 points, 100k+ = 100 points
-    if (stars < 1000) return Math.min(30, (stars / 1000) * 50);
-    if (stars < 10000) return Math.min(80, 50 + ((stars - 1000) / 9000) * 30);
-    return 100;
+  static isPermissiveLicense(license: string | undefined | null): boolean {
+    if (!license) return false;
+    return PERMISSIVE_LICENSES.some((l) => license.toUpperCase().includes(l.toUpperCase()));
   }
 
-  private calculateRecency(lastActivity: number): number {
-    const now = Date.now();
-    const daysAgo = (now - lastActivity) / (1000 * 60 * 60 * 24);
+  static meetsThreshold(score: number): boolean {
+    return score >= QUALITY_THRESHOLD;
+  }
 
-    if (daysAgo < 7) return 100;
-    if (daysAgo < 30) return 80;
-    if (daysAgo < 90) return 60;
-    if (daysAgo < 180) return 40;
-    return 20;
+  /** Legacy instance-based API kept for backward compatibility */
+  calculateScore(metrics: { stars: number; lastActivity: number; maintenanceScore: number; licenseBonus: number }): number {
+    const daysSinceLastCommit = (Date.now() - metrics.lastActivity) / (1000 * 60 * 60 * 24);
+    return QualityScorer.calculate({
+      stars: metrics.stars,
+      daysSinceLastCommit,
+      issueClosureRate: metrics.maintenanceScore / 100,
+      prMergeRate: metrics.maintenanceScore / 100,
+      hasTests: false,
+      testCoverage: 0,
+      readmeLength: 0,
+      license: null,
+      isPermissive: metrics.licenseBonus > 0,
+    });
   }
 
   isLicensePermissive(license: string | undefined | null): boolean {
-    if (!license) return false;
-    return this.PERMISSIVE_LICENSES.some((l) => license.toUpperCase().includes(l));
+    return QualityScorer.isPermissiveLicense(license);
   }
 
   meetsThreshold(score: number): boolean {
-    return score >= this.QUALITY_THRESHOLD;
+    return QualityScorer.meetsThreshold(score);
   }
 }
-

@@ -1,4 +1,4 @@
-import { Pattern, Template, GeneratedFile, Project, Solution } from '@ariscode/shared';
+import { Pattern, Template, GeneratedFile, Project, Solution, Conversation, ConversationMessage, Session } from '@ariscode/shared';
 
 export interface IPatternRepository {
   findById(id: string): Promise<Pattern | null>;
@@ -37,6 +37,25 @@ export interface ISolutionRepository {
   update(id: string, solution: Partial<Solution>): Promise<void>;
   delete(id: string): Promise<void>;
   findPersonalSolutions(): Promise<Solution[]>;
+}
+
+export interface IConversationRepository {
+  findById(id: string): Promise<Conversation | null>;
+  findAll(userId?: string): Promise<Conversation[]>;
+  create(conversation: Conversation): Promise<void>;
+  update(id: string, conversation: Partial<Conversation>): Promise<void>;
+  delete(id: string): Promise<void>;
+  addMessage(message: ConversationMessage): Promise<void>;
+  getMessages(conversationId: string): Promise<ConversationMessage[]>;
+}
+
+export interface ISessionRepository {
+  findById(id: string): Promise<Session | null>;
+  findActive(userId: string): Promise<Session[]>;
+  create(session: Session): Promise<void>;
+  updateActivity(id: string): Promise<void>;
+  deactivate(id: string): Promise<void>;
+  cleanExpired(): Promise<void>;
 }
 
 export interface IGenerator {

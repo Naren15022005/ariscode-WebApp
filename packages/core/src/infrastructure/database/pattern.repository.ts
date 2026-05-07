@@ -2,13 +2,13 @@ import { Pattern, PatternPriority } from '@ariscode/shared';
 import { IPatternRepository } from '../../domain/repositories';
 import { getSharedStorage } from './sqlite.service';
 
-const TABLE_NAME = 'patterns';
+const TABLE_NAME = 'templates';
 
 export class SqlitePatternRepository implements IPatternRepository {
   async findById(id: string): Promise<Pattern | null> {
     const storage = getSharedStorage();
     const table = storage.get(TABLE_NAME) || [];
-    const row = table.find(r => r.id === id);
+    const row = table.find((r: any) => r.id === id);
     return row ? this.mapToPattern(row) : null;
   }
 
@@ -62,7 +62,7 @@ export class SqlitePatternRepository implements IPatternRepository {
   async update(id: string, pattern: Partial<Pattern>): Promise<void> {
     const storage = getSharedStorage();
     const table = storage.get(TABLE_NAME) || [];
-    const index = table.findIndex(r => r.id === id);
+    const index = table.findIndex((r: any) => r.id === id);
     if (index >= 0) {
       table[index] = { ...table[index], ...pattern, updatedAt: Date.now() };
     }
@@ -71,7 +71,7 @@ export class SqlitePatternRepository implements IPatternRepository {
   async delete(id: string): Promise<void> {
     const storage = getSharedStorage();
     const table = storage.get(TABLE_NAME) || [];
-    const index = table.findIndex(r => r.id === id);
+    const index = table.findIndex((r: any) => r.id === id);
     if (index >= 0) {
       table.splice(index, 1);
     }

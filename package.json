@@ -5,16 +5,22 @@
   "private": true,
   "packageManager": "pnpm@9.1.0",
   "scripts": {
-    "dev": "pnpm -r dev",
-    "build": "pnpm -r build",
-    "typecheck": "pnpm -r typecheck",
-    "test": "pnpm -r test",
-    "lint": "pnpm -r lint"
+    "dev": "cd packages/web && npm run dev",
+    "build": "cd packages/web && npm run build",
+    "typecheck": "cd packages/web && npm run typecheck",
+    "test": "cd packages/web && npm run test",
+    "lint": "cd packages/web && npm run lint",
+    "db:migrate": "npx ts-node --esm scripts/migrate.ts",
+    "db:seed": "npx ts-node --esm scripts/seed-db.ts",
+    "sync:github": "npx ts-node --esm scripts/github-sync.ts",
+    "bench": "npx ts-node --esm scripts/bench.ts"
   },
   "workspaces": [
     "packages/*"
   ],
   "devDependencies": {
+    "@types/sql.js": "^1.4.11",
+    "sql.js": "^1.14.1",
     "typescript": "^5.3.3"
   }
 }

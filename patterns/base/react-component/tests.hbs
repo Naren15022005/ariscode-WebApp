@@ -1,0 +1,9 @@
+import { render, screen } from '@testing-library/react';
+import { {{pascalCase componentName}} } from './{{kebabCase componentName}}';
+
+describe('{{pascalCase componentName}}', () => {
+  it('renders without crashing', () => {
+    render(<{{pascalCase componentName}}{{#each props}} {{this.name}}={{{defaultValue this.type}}}{{/each}} />);
+    expect(screen.getByText('{{componentName}}')).toBeInTheDocument();
+  });
+});

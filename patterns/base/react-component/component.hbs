@@ -1,0 +1,27 @@
+import React{{#if useProps}}, { FC }{{/if}} from 'react';
+{{#if useStyles}}import styles from './{{kebabCase componentName}}.module.css';{{/if}}
+
+{{#if useProps}}
+interface {{pascalCase componentName}}Props {
+{{#each props}}
+  {{this.name}}{{#if this.optional}}?{{/if}}: {{this.type}};
+{{/each}}
+}
+{{/if}}
+
+{{#if useProps}}
+export const {{pascalCase componentName}}: FC<{{pascalCase componentName}}Props> = ({
+{{#each props}}  {{this.name}},
+{{/each}}}) => {
+{{else}}
+export const {{pascalCase componentName}} = () => {
+{{/if}}
+  return (
+    <div{{#if useStyles}} className={styles.container}{{/if}}>
+      <h2>{{componentName}}</h2>
+      {/* TODO: implement {{componentName}} */}
+    </div>
+  );
+};
+
+export default {{pascalCase componentName}};

@@ -1,0 +1,12 @@
+import { IsString, IsOptional{{#if hasNumbers}}, IsNumber{{/if}} } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class Create{{pascalCase entityName}}Dto {
+{{#each fields}}
+  @ApiProperty({{#if this.nullable}}{ required: false }{{/if}})
+  {{#if this.nullable}}@IsOptional(){{/if}}
+  @Is{{pascalCase this.type}}()
+  {{camelCase this.name}}{{#if this.nullable}}?{{/if}}: {{this.type}};
+
+{{/each}}
+}

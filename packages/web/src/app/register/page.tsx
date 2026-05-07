@@ -1,0 +1,50 @@
+import Link from 'next/link';
+
+export default function RegisterPage() {
+  return (
+    <main className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-white">Aris Code</h1>
+          <p className="text-slate-400 mt-2">Create a new account</p>
+        </div>
+
+        <div className="bg-slate-800 rounded-xl p-6 border border-slate-700 space-y-4">
+          <div>
+            <label className="block text-sm text-slate-400 mb-1">Name</label>
+            <input
+              type="text"
+              placeholder="Your name"
+              className="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-slate-400 mb-1">Email</label>
+            <input
+              type="email"
+              placeholder="you@example.com"
+              className="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label className="block text-sm text-slate-400 mb-1">Password</label>
+            <input
+              type="password"
+              placeholder="Min 8 characters"
+              className="w-full bg-slate-900 border border-slate-600 rounded px-3 py-2 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-blue-500"
+            />
+          </div>
+          <button className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 rounded font-semibold text-white transition">
+            Create Account
+          </button>
+          <p className="text-center text-sm text-slate-400">
+            Already have an account?{' '}
+            <Link href="/login" className="text-blue-400 hover:underline">
+              Sign in
+            </Link>
+          </p>
+        </div>
+      </div>
+    </main>
+  );
+}

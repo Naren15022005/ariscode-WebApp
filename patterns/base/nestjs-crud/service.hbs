@@ -1,0 +1,40 @@
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { {{pascalCase entityName}} } from './{{kebabCase entityName}}.entity';
+import { Create{{pascalCase entityName}}Dto } from './dto/create-{{kebabCase entityName}}.dto';
+import { Update{{pascalCase entityName}}Dto } from './dto/update-{{kebabCase entityName}}.dto';
+
+@Injectable()
+export class {{pascalCase entityName}}Service {
+  constructor(
+    @InjectRepository({{pascalCase entityName}})
+    private readonly repo: Repository<{{pascalCase entityName}}>,
+  ) {}
+
+  create(dto: Create{{pascalCase entityName}}Dto): Promise<{{pascalCase entityName}}> {
+    const entity = this.repo.create(dto);
+    return this.repo.save(entity);
+  }
+
+  findAll(): Promise<{{pascalCase entityName}}[]> {
+    return this.repo.find();
+  }
+
+  async findOne(id: string): Promise<{{pascalCase entityName}}> {
+    const entity = await this.repo.findOne({ where: { id } });
+    if (!entity) throw new NotFoundException(`{{pascalCase entityName}} ${id} not found`);
+    return entity;
+  }
+
+  async update(id: string, dto: Update{{pascalCase entityName}}Dto): Promise<{{pascalCase entityName}}> {
+    await this.findOne(id);
+    await this.repo.update(id, dto);
+    return this.findOne(id);
+  }
+
+  async remove(id: string): Promise<void> {
+    await this.findOne(id);
+    await this.repo.delete(id);
+  }
+}
